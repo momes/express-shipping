@@ -1,11 +1,19 @@
 "use strict";
+/** importing and setting up mocks FIRST */
+let mockedShipitApi = require("../shipItApi");
+mockedShipitApi.shipProduct = jest.fn()
+const AxiosMockAdapter = require("axios-mock-adapter");
+const axios = require("axios");
 
+// these imports must happen after mock imports
+const axiosMock = new AxiosMockAdapter(axios);
 const request = require("supertest");
 const app = require("../app");
 
 
 describe("POST /", function () {
   test("valid", async function () {
+    mockedShipitApi.shipProduct.mockReturnValue(4000)
     const resp = await request(app).post("/shipments").send({
       productId: 1000,
       name: "Test Tester",
